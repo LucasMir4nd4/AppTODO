@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-bt" xmlns:th="http://www.w3.org/1999/xhtml">
+<head >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Home</title>
+</head>
+
+<body class="app-container">
+<h1>TODO WEB APP</h1>
+<div class="login-container">
+<div class="login-form">
+    <h2>Adicionar Tarefa</h2>
+    <form action="/adicionarTarefa" class="form-group" method="post" >
+
+        <input type="text" id="tarefa" name="tarefa" required>
+
+        <div style="text-align: center;">
+            <button class="button" type="submit">Criar</button>
+        </div>
+    </form>
+</div>
+</div>
+
+
+<h2>Tarefas cadastradas</h2>
+<table>
+    <thead>
+    <tr th:each="tarefa : ${tarefas}">
+        <th th:text="${tarefa.titulo}">Titulo</th>
+        <th th:text="${tarefa.data}">Data</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td >Titulo</td>
+        <td >Data</td>
+        <td>
+            <form>
+                <input type="checkbox" class="remove"></input>
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    const form = document.getElementById('tarefaForm');
+    const lista = document.getElementById('listaTarefas');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const titulo = document.getElementById('titulo').value;
+      const usuarioId = document.getElementById('usuarioId').value;
+
+      const novaTarefa = {
+        titulo: titulo,
+        concluida: false,
+        usuario: {
+          id: parseInt(usuarioId)
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/tarefas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novaTarefa)
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao cadastrar tarefa');
+        }
+
+        const tarefaSalva = await response.json();
+
+        // Adiciona na lista
+        const item = document.createElement('li');
+        item.textContent = `#${tarefaSalva.id} - ${tarefaSalva.titulo}`;
+        lista.appendChild(item);
+
+        // Limpa o formulário
+        form.reset();
+
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+</script>
+</body>
+</html>
