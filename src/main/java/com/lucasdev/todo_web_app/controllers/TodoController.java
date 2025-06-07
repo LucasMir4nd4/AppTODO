@@ -2,32 +2,42 @@ package com.lucasdev.todo_web_app.controllers;
 
 import com.lucasdev.todo_web_app.entities.Todo;
 import com.lucasdev.todo_web_app.services.TodoService;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/todos")
+@Controller
 public class TodoController {
 
-    private TodoService todoService;
+    private final TodoService todoService;
 
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
-    @PostMapping
-    public List<Todo> create(@RequestBody Todo todo) {
-        return todoService.create(todo);
+//    @GetMapping("/home")
+//    public String home(){
+//        return "home";
+//    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute Todo todo, Model model) {
+
+        List<Todo> listaAtualizada =  todoService.create(todo);
+        return "redirect:/home";
     }
 
-    @GetMapping
-    public List<Todo> list() {
-        return todoService.list();
+    @GetMapping("/home")
+    public String list(Todo todo, Model model) {
+        model.addAttribute("todos", todoService.list());
+        return "home";
     }
 
     @PutMapping
-    public List<Todo> update(@RequestBody Todo todo) {
+    public List<Todo> update(@ModelAttribute Todo todo) {
         return todoService.update(todo);
     }
 

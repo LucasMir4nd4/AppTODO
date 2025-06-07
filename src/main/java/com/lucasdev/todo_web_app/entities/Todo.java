@@ -14,8 +14,8 @@ public class Todo {
     private Long id;
     private String titulo;
     private String descricao;
-    private boolean realizado;
-    private String prioridade;
+    private Status status;
+    private int prioridade;
 
     public String getTitle() {
         return titulo;

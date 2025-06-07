@@ -24,7 +24,7 @@ public class TodoService {
 
     public List<Todo> list(){
         Sort sort = Sort.by( "prioridade")
-                .descending()
+                .ascending()
                 .and(Sort.by("titulo")
                 .ascending());
         return todoRepository.findAll(sort);

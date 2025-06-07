@@ -12,9 +12,23 @@
 <div class="login-container">
 <div class="login-form">
     <h2>Adicionar Tarefa</h2>
-    <form action="/adicionarTarefa" class="form-group" method="post" >
+    <form action="/create" class="form-group" method="post" >
 
-        <input type="text" id="tarefa" name="tarefa" required>
+        <label for="titulo" class="label">Título</label>
+        <input type="text" id="titulo" name="titulo" required>
+
+        <label for="descricao" class="label">Descrição</label>
+        <input type="text" id="descricao" name="descricao" required>
+        <label class="label">Prioridade</label>
+
+        <select name="prioridade" id="prioridade">
+            <option value="3">Baixa</option>
+            <option value="2">Média</option>
+            <option value="1">Alta</option>
+        </select>
+
+        <input type="hidden" id="status" name="status" value="PENDENTE">
+
 
         <div style="text-align: center;">
             <button class="button" type="submit">Criar</button>
@@ -24,26 +38,42 @@
 </div>
 
 
-<h2>Tarefas cadastradas</h2>
+<h2>Tarefas Pendentes</h2>
 <table>
     <thead>
-    <tr th:each="tarefa : ${tarefas}">
-        <th th:text="${tarefa.titulo}">Titulo</th>
-        <th th:text="${tarefa.data}">Data</th>
-        <th>Status</th>
-    </tr>
+        <tr>
+            <td>Titulo</td>
+            <td>Descrição</td>
+            <td>Ação</td>
+        </tr>
     </thead>
     <tbody>
-    <tr>
-        <td >Titulo</td>
-        <td >Data</td>
-        <td>
-            <form>
-                <input type="checkbox" class="remove"></input>
-            </form>
-        </td>
+        <tr th:each="todo : ${todos}">
+            <th th:text="${todo.titulo}">Titulo</th>
+            <th th:text="${todo.descricao}">Descrição</th>
+            <th>
+                <form th:action="@{'/todos/concluir/' + ${todo.id}}" method="post">
+                <button type="submit">Concluir</button>
+            </form></th>
+        </tr>
+    </tbody>
+</table>
 
-    </tr>
+<h2>Tarefas Concluìdas</h2>
+<table>
+    <thead>
+        <tr>
+            <td>Titulo</td>
+            <td>Descrição</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="todo : ${todos}" th:if="${todo.status.name() == 'CONCLUIDO'}">
+            <th th:text="${todo.titulo}">Titulo</th>
+            <th th:text="${todo.descricao}">Descrição</th>
+            <th th:text="${todo.status}">Ações</th>
+        </tr>
     </tbody>
 </table>
 
